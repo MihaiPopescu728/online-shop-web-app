@@ -14,6 +14,23 @@ window.Shop = {
 
     },
 
+    addProductToCart: function (productId) {
+
+        var request = {
+            // todo: take customer id dinamically somehow
+            customerId: 6,
+            productId: productId
+        };
+
+        $ajax ({
+            url: Shop.API_BASE_URL + "/carts",
+            method: "PUT",
+            contentType: "application/jason",
+            data: JSON.stringify(request)
+        }).done(function() {
+            window.location.replace(url:"cart.html");
+    },
+
     getProductHtml: function (product) {
 
         //default ajax method: "GET"
