@@ -5,8 +5,8 @@ window.Shop = {
     getProducts: function () {
 
         $.ajax({
-         url:Shop.API_BASE_URL + "/products"
-        }).done (function (response) {
+            url: Shop.API_BASE_URL + "/products"
+        }).done(function (response) {
             console.log(response);
             Shop.displayProducts(response.content);
 
@@ -22,13 +22,15 @@ window.Shop = {
             productId: productId
         };
 
-        $ajax ({
+        $.ajax({
             url: Shop.API_BASE_URL + "/carts",
             method: "PUT",
-            contentType: "application/jason",
+            contentType: "application/json",
             data: JSON.stringify(request)
-        }).done(function() {
-            window.location.replace(url:"cart.html");
+        }).done(function () {
+            window.location.replace("cart.html");
+
+        })
     },
 
     getProductHtml: function (product) {
@@ -46,7 +48,8 @@ window.Shop = {
                         </div>  
                         
                         <div class="product-option-shop">
-                            <a class="add_to_cart_button" data-quantity="1" data-product_sku="" data-product_id="70" rel="nofollow" href="/canvas/shop/?add-to-cart=${product.id}">Add to cart</a>
+                            <a class="add_to_cart_button" data-quantity="1" data-product_sku="" data-product_id="${product.id}" 
+                            rel="nofollow" href="/canvas/shop/?add-to-cart=${product.id}">Add to cart</a>
                         </div>                       
                     </div>
                 </div>`
@@ -56,10 +59,22 @@ window.Shop = {
 
         var productsHtml = "";
 
-        products.forEach (oneProduct => productsHtml += Shop.getProductHtml(oneProduct));
+        products.forEach(oneProduct => productsHtml += Shop.getProductHtml(oneProduct));
 
-        $(".single-product-area .row:first-child") .html(productsHtml);
+        $(".single-product-area .row:first-child").html(productsHtml);
+    },
+
+    bindEvents: function () {
+        $(".single-product-area").delegate(".add_to_cart_button", "click",
+            function (event) {
+                event.preventDefault();
+
+                let productId = $(this).data("product_id");
+
+                Shop.addProductToCart(productId);
+            })
     }
 };
 
 Shop.getProducts();
+Shop.bindEvents();
